@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Technicians</h2>
+</div>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for technician in technicians %}
+                <tr>
+                    <td>{{ technician.name or 'N/A' }}</td>
+                    <td>{{ technician.specialization or 'General' }}</td>
+                    <td><span class="badge status-{{ technician.status|lower|replace(' ', '-') if technician.status else 'available' }}">{{ technician.status or 'Available' }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No technician records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

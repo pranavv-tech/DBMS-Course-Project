@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Update Status</h2>
+</div>
+
+<section class="panel form-panel">
+    <p><strong>Request:</strong> {{ request.request_number }} - {{ request.title }}</p>
+    <form method="post">
+        <div class="field-group">
+            <label>Status</label>
+            <select name="status" required>
+                {% for status in statuses %}
+                <option value="{{ status }}" {% if request.status == status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% if request.status == 'Completed' or request.status == 'Closed' %}
+        <div class="field-group">
+            <label>Closure Details</label>
+            <textarea name="closure_details" rows="3" placeholder="Add closure details if closing the request"></textarea>
+        </div>
+        <div class="field-group">
+            <label>Closed Date</label>
+            <input type="date" name="closed_date">
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button class="btn" type="submit">Save Status</button>
+            <a class="btn btn-secondary" href="{{ url_for('request_details', request_id=request.request_id) }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

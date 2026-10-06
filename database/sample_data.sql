@@ -1,0 +1,3 @@
+-- No sample INSERT statements are published.
+-- The live database contains project records and may include personal/contact information.
+-- This file is intentionally documentation-only; use authorized data in a local database.

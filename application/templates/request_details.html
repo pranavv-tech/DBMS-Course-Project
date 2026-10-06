@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Request Details</h2>
+    <div class="header-actions">
+        <a class="btn btn-secondary" href="{{ url_for('assign_technician', request_id=request.request_id) }}">Assign Technician</a>
+        <a class="btn btn-secondary" href="{{ url_for('update_status', request_id=request.request_id) }}">Update Status</a>
+        <a class="btn btn-secondary" href="{{ url_for('add_work_log', request_id=request.request_id) }}">Add Work Log</a>
+        <a class="btn btn-secondary" href="{{ url_for('add_material_usage', request_id=request.request_id) }}">Add Material</a>
+        <a class="btn btn-secondary" href="{{ url_for('close_request', request_id=request.request_id) }}">Close Request</a>
+        <a class="btn btn-secondary" href="{{ url_for('add_feedback', request_id=request.request_id) }}">Add Feedback</a>
+    </div>
+</div>
+
+<section class="panel">
+    <div class="detail-grid">
+        <div><strong>Request Number:</strong> {{ request.request_number }}</div>
+        <div><strong>Title:</strong> {{ request.title }}</div>
+        <div><strong>Reported By:</strong> {{ request.user_name or 'N/A' }}</div>
+        <div><strong>Building:</strong> {{ request.building_name or 'N/A' }}</div>
+        <div><strong>Room:</strong> {{ request.room_number or 'N/A' }}</div>
+        <div><strong>Category:</strong> {{ request.category_name or 'N/A' }}</div>
+        <div><strong>Priority:</strong> {{ request.priority_name or 'N/A' }}</div>
+        <div><strong>Request Date:</strong> {{ request.request_date.strftime('%Y-%m-%d') if request.request_date else 'N/A' }}</div>
+        <div><strong>Current Status:</strong> <span class="badge status-{{ request.status|lower|replace(' ', '-') }}">{{ request.status or 'Pending' }}</span></div>
+        <div><strong>Assigned Technician:</strong> {{ technician_assignment.technician_name if technician_assignment else 'Unassigned' }}</div>
+    </div>
+    <div class="detail-description">
+        <h3>Description</h3>
+        <p>{{ request.description }}</p>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h3>Work Logs</h3>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Technician</th>
+                    <th>Description</th>
+                    <th>Hours</th>
+                    <th>Work Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in work_logs %}
+                <tr>
+                    <td>{{ item.technician_name or 'N/A' }}</td>
+                    <td>{{ item.work_description }}</td>
+                    <td>{{ item.hours_spent }}</td>
+                    <td>{{ item.work_date.strftime('%Y-%m-%d') if item.work_date else 'N/A' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">No work logs recorded yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h3>Materials Used</h3>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Unit Cost</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in materials_used %}
+                <tr>
+                    <td>{{ item.material_name or 'N/A' }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.unit or 'N/A' }}</td>
+                    <td>{{ item.unit_cost or 0 }}</td>
+                    <td>{{ item.total_cost or 0 }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5">No materials used.</td></tr>
+                {% endfor %}
+            </tbody>
+            {% if materials_used %}
+            <tfoot>
+                <tr>
+                    <th colspan="4">Total Material Cost</th>
+                    <th>{{ '%.2f'|format(material_total) }}</th>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <h3>Status History</h3>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Change</th>
+                    <th>Changed By</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td>{{ item.old_status or 'New' }} &rarr; <span class="badge status-{{ item.new_status|lower|replace(' ', '-') }}">{{ item.new_status }}</span></td>
+                    <td>{{ item.changed_by_name or 'Admin' }}</td>
+                    <td>{{ item.changed_at.strftime('%Y-%m-%d') if item.changed_at else 'N/A' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3">No status history yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% if feedback %}
+<section class="panel">
+    <div class="panel-header">
+        <h3>Feedback</h3>
+    </div>
+    <p><strong>Rating:</strong> {{ feedback.rating }}/5</p>
+    <p><strong>Comments:</strong> {{ feedback.comments }}</p>
+</section>
+{% endif %}
+{% endblock %}

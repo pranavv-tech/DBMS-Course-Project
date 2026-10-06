@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Reports</h2>
+</div>
+
+<section class="panel">
+    <div class="panel-header"><h3>Pending Requests</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Request Number</th><th>Title</th><th>Category</th><th>Priority</th><th>Building</th><th>Room</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for item in reports.pending_requests %}
+                <tr>
+                    <td>{{ item.request_number }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.category_name or 'N/A' }}</td>
+                    <td>{{ item.priority_name or 'N/A' }}</td>
+                    <td>{{ item.building_name or 'N/A' }}</td>
+                    <td>{{ item.room_number or 'N/A' }}</td>
+                    <td><span class="badge status-{{ item.status|lower|replace(' ', '-') }}">{{ item.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7">No pending requests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Ageing Requests</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Request Number</th><th>Title</th><th>Request Date</th><th>Status</th><th>Age in Days</th></tr></thead>
+            <tbody>
+                {% for item in reports.aging_requests %}
+                <tr>
+                    <td>{{ item.request_number }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.request_date.strftime('%Y-%m-%d') if item.request_date else 'N/A' }}</td>
+                    <td><span class="badge status-{{ item.status|lower|replace(' ', '-') }}">{{ item.status }}</span></td>
+                    <td>{{ item.age_days }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5">No aging requests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Technician Load</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Technician</th><th>Specialization</th><th>Assigned Requests</th></tr></thead>
+            <tbody>
+                {% for item in reports.technician_load %}
+                <tr>
+                    <td>{{ item.technician_name or 'N/A' }}</td>
+                    <td>{{ item.specialization or 'General' }}</td>
+                    <td>{{ item.assigned_requests or 0 }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3">No technician statistics available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Building-wise Request Count</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Building</th><th>Number of Requests</th></tr></thead>
+            <tbody>
+                {% for item in reports.building_counts %}
+                <tr>
+                    <td>{{ item.building_name }}</td>
+                    <td>{{ item.request_count }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="2">No building data available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Material Usage</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Material</th><th>Quantity Used</th><th>Unit Cost</th><th>Total Cost</th></tr></thead>
+            <tbody>
+                {% for item in reports.material_usage %}
+                <tr>
+                    <td>{{ item.material_name }}</td>
+                    <td>{{ item.quantity_used or 0 }}</td>
+                    <td>{{ item.unit_cost or 0 }}</td>
+                    <td>{{ item.total_cost or 0 }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">No material usage recorded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Building Maintenance Cost</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Building</th><th>Total Cost</th></tr></thead>
+            <tbody>
+                {% for item in reports.building_costs %}
+                <tr>
+                    <td>{{ item.building_name }}</td>
+                    <td>{{ item.total_cost or 0 }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="2">No cost data available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Feedback Report</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Request Number</th><th>Rating</th><th>Comments</th></tr></thead>
+            <tbody>
+                {% for item in reports.feedback_report %}
+                <tr>
+                    <td>{{ item.request_number }}</td>
+                    <td>{{ item.rating }}</td>
+                    <td>{{ item.comments }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3">No feedback available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h3>Response Time</h3></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Request Number</th><th>Response Days</th></tr></thead>
+            <tbody>
+                {% for item in reports.response_times %}
+                <tr>
+                    <td>{{ item.request_number }}</td>
+                    <td>{{ item.response_days }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="2">No assigned requests found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Request Feedback</h2>
+</div>
+
+<section class="panel form-panel">
+    <p><strong>Request:</strong> {{ request.request_number }} - {{ request.title }}</p>
+    <form method="post">
+        <div class="field-group">
+            <label>Rating</label>
+            <select name="rating" required>
+                <option value="">Select rating</option>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label>Comments</label>
+            <textarea name="comments" rows="4" required></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn" type="submit">Submit Feedback</button>
+            <a class="btn btn-secondary" href="{{ url_for('request_details', request_id=request.request_id) }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

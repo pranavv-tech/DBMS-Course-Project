@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Assign Technician</h2>
+</div>
+
+<section class="panel form-panel">
+    <p><strong>Request:</strong> {{ request.request_number }} - {{ request.title }}</p>
+    <form method="post">
+        <div class="field-group">
+            <label>Technician</label>
+            <select name="technician_id" required>
+                <option value="">Select technician</option>
+                {% for technician in technicians %}
+                <option value="{{ technician.technician_id }}">{{ technician.name }} - {{ technician.specialization }} ({{ technician.status or 'Available' }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-actions">
+            <button class="btn" type="submit">Assign</button>
+            <a class="btn btn-secondary" href="{{ url_for('request_details', request_id=request.request_id) }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

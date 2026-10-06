@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Add Material Usage</h2>
+</div>
+
+<section class="panel form-panel">
+    <p><strong>Request:</strong> {{ request.request_number }} - {{ request.title }}</p>
+    <form method="post">
+        <div class="field-group">
+            <label>Material</label>
+            <select name="material_id" required>
+                <option value="">Select material</option>
+                {% for material in materials %}
+                <option value="{{ material.material_id }}">{{ material.material_name }} ({{ material.unit }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label>Quantity</label>
+            <input type="number" name="quantity" min="0.01" step="0.01" required>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn" type="submit">Add Material</button>
+            <a class="btn btn-secondary" href="{{ url_for('request_details', request_id=request.request_id) }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

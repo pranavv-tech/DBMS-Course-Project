@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Dashboard</h2>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span>Total Requests</span>
+        <strong>{{ dashboard.stats.total_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Pending</span>
+        <strong>{{ dashboard.stats.pending_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Assigned</span>
+        <strong>{{ dashboard.stats.assigned_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>In Progress</span>
+        <strong>{{ dashboard.stats.in_progress_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Completed</span>
+        <strong>{{ dashboard.stats.completed_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Closed</span>
+        <strong>{{ dashboard.stats.closed_requests }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Total Technicians</span>
+        <strong>{{ dashboard.technicians_count }}</strong>
+    </div>
+    <div class="stat-card">
+        <span>Average Rating</span>
+        <strong>{{ '%.2f'|format(dashboard.average_rating) }}</strong>
+    </div>
+</div>
+
+<section class="panel">
+    <div class="panel-header">
+        <h3>Recent Maintenance Requests</h3>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Request Number</th>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Technician</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in dashboard.recent_requests %}
+                <tr>
+                    <td>{{ item.request_number }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.user_name or 'N/A' }}</td>
+                    <td><span class="badge status-{{ item.status|lower|replace(' ', '-') }}">{{ item.status or 'Pending' }}</span></td>
+                    <td>{{ item.request_date.strftime('%Y-%m-%d') if item.request_date else 'N/A' }}</td>
+                    <td>{{ item.technician_name or 'Unassigned' }}</td>
+                    <td><a class="btn btn-small" href="{{ url_for('request_details', request_id=item.request_id) }}">View</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No recent requests found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

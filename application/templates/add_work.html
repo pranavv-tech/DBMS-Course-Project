@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Add Work Log</h2>
+</div>
+
+<section class="panel form-panel">
+    <p><strong>Request:</strong> {{ request.request_number }} - {{ request.title }}</p>
+    <form method="post">
+        <div class="field-group">
+            <label>Technician</label>
+            <select name="technician_id" required>
+                <option value="">Select technician</option>
+                {% for technician in technicians %}
+                <option value="{{ technician.technician_id }}">{{ technician.name }} - {{ technician.specialization }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label>Work Description</label>
+            <textarea name="work_description" rows="4" required></textarea>
+        </div>
+
+        <div class="field-group">
+            <label>Hours Spent</label>
+            <input type="number" name="hours_spent" min="0" step="0.1" required>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn" type="submit">Save Work Log</button>
+            <a class="btn btn-secondary" href="{{ url_for('request_details', request_id=request.request_id) }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
